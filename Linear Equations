@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+	float determinant_xp, determinant_g, determinant_yp, determinant_zp;
+	float x, y, z;   //x, y and one decimal point and float command to keep them
+	float f1[] = {0, 0, 0, 0};  //keep unknown coefficients of equations as array with float command
+	float f2[] = {0, 0, 0, 0};
+	float f3[] = {0, 0, 0, 0};
+	float Result1, Result2, Result3;
+	FILE *file;   
+	file = fopen("C:\\Users\\krdln\\Desktop\\file.txt", "r");  // open the file	  
+	fseek(file, 0, 0);    //With this command, we can start the values in the file from 0 and call them again.
+	for(int i=0; i<4; i++){     //With the for command, we read all 4 values one by one
+		fscanf(file, "%f", &f1[i]);
+		fseek(file, 1, 1);  
+	}
+	fseek(file, 1, 1);    
+	for(int i_2=0; i_2<4; i_2++){
+		fscanf(file, "%f", &f2[i_2]);
+		fseek(file, 1, 1);
+	}
+	fseek(file, 1, 1);
+	for(int i_3=0; i_3<4; i_3++){
+		fscanf(file, "%f", &f3[i_3]);
+		fseek(file, 1, 1);
+	}
+	fclose(file);  
+	printf("Coefficients of the equation= \n");    //we print the coefficients of the equation
+	printf("x1= %f " "y1= %f " "z1= %f " "Result1= %f \n", f1[0], f1[1], f1[2], f1[3]); 
+	printf("x2= %f " "y2= %f " "z2= %f " "Result2= %f \n", f2[0], f2[1], f2[2], f2[3]);
+	printf("x3= %f " "y3= %f " "z3= %f " "Result3= %f \n", f3[0], f3[1], f3[2], f3[3]);
+	{
+	if(f3[0] == 0 && f3[1] == 0 && f3[2] == 0 && f3[3] == 0 && f1[2] == 0 && f2[2] == 0){   //if the system is an equation with 2 unknowns, it is solved with this loop
+			x = ((f1[1]*-f2[3])-(f2[1]*-f1[3]))/((f1[0]*f2[1])-(f2[0]*f1[1]));
+			y = ((-f1[3]*f2[0])-(-f2[3]*f1[0]))/((f1[0]*f2[1])-(f2[0]*f1[1]));
+			printf("x is equal to = %f \n", x);        
+			printf("y is equal to = %f \n", y);       
+			Result1 = ((x*f1[0])+y*f1[1]);			  
+			Result2 = ((x*f2[0])+y*f2[1]);			  
+			printf("The result of the first equation after the unknowns are found= %f \n", Result1);
+			printf("The result of the second equation after the unknowns are found= %f \n", Result2);
+			return 0;		
+		}
+	else   //if the equation has 3 unknowns, the system is solved like the loop written with Cramer's rule
+		{
+			determinant_xp = f1[3] * ((f2[1]*f3[2]) - (f3[1]*f2[2])) - (f1[1] * ((f2[3] * f3[2])- (f3[3] * f2[2]))) + (f1[2] * ((f2[3] * f3[1]) - (f3[3] * f2[1])));
+      		determinant_g = f1[0] * ((f2[1]*f3[2]) - (f3[1]*f2[2])) - (f1[1] * ((f2[0] * f3[2]) - (f3[0] * f2[2]))) + (f1[2] * ((f2[0] * f3[1]) - (f3[0] * f2[1])));
+			determinant_yp = f1[0] * ((f2[3]*f3[2]) - (f3[3]*f2[2])) - (f1[3] * ((f2[0] * f3[2]) - (f3[0] * f2[2]))) + (f1[2] * ((f2[0] * f3[3]) - (f3[0] * f2[3])));
+  			determinant_zp = f1[0] * ((f2[1]*f3[3]) - (f3[1]*f2[3])) - (f1[1] * ((f2[0] * f3[3]) - (f3[0] * f2[3]))) + (f1[3] * ((f2[0] * f3[1]) - (f3[0] * f2[1])));
+
+  			x = determinant_xp / determinant_g;
+  			y = determinant_yp / determinant_g;
+  			z = determinant_zp / determinant_g;
+  			
+  			printf("x = %f \n", x);       
+   			printf("y = %f \n", y);        
+			printf("z = %f \n", z); 
+  			Result1 = ((x*f1[0])+(y*f1[1])+(z*f1[2])); 
+			Result2 = ((x*f2[0])+(y*f2[1])+(z*f2[2])); 
+			Result3 = ((x*f3[0])+(y*f3[1])+(z*f3[2])); 
+			printf("The result of the first equation after the unknowns are found= %f \n", Result1);
+			printf("The result of the second equation after the unknowns are found= %f \n", Result2);
+			printf("The result of the third equation after the unknowns are found= %f \n", Result3);   
+			return 0;		
+		}
+	}
+}
